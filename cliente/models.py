@@ -4,7 +4,7 @@ from django.forms import ValidationError
 
 import re
 
-from validador.validacpf import valida_cpf
+from utils.validacpf import valida_cpf
 
 
 class Cliente(models.Model):
