@@ -1,4 +1,4 @@
-
+{%load grfilters%}
 {% load static %}
 
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
@@ -38,7 +38,7 @@
                         
                     </span>
                     <span class="nav-cart-count mr-1">
-                        <strong></strong>
+                        <strong>{{request.session.carrinho|cart_totalqtd}} x Prod</strong>
                     </span>
                     <span class="nav-cart-icon mr-2">
                         <i class="fas fa-shopping-cart"></i>
