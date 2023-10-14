@@ -3,3 +3,4 @@ def formatar_preco(val):
 
 def cart_totalqtd(carrinho):
     return sum([item['quantidade'] for item in carrinho.values()])
+
