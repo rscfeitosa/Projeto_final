@@ -1,12 +1,16 @@
-from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
 from . import models
+from produto.formulario import ProdutoForm
+from produto.models import Produto
 
 from pprint import pprint
+
+
 
 class ListaProdutos(ListView):
     model = models.Produto
@@ -120,10 +124,39 @@ class RemoverDoCarrinho(View):
 
 class Carrinho(View):
     def get(self, *args, **kwargs):
-        return render(self.request, 'produto/carrinho.html')
+        contexto = {
+            'carrinho': self.request.session.get('carrinho',{})
+        }
+        return render(self.request, 'produto/carrinho.html', contexto)
 
 
 
 class Finalizar(View):
     def get(self, *args, **kwargs):
         return HttpResponse ('FIM')
+    
+
+def cadastro(request):
+   data = {}
+   data['db'] = Produto.objects.all()
+   return render (request, "produto/homecadastro.html", data)
+
+def adicionarproduto(request):
+   data={}
+   data['formulario'] = ProdutoForm()
+   return render (request, "produto/formulario.html", data)
+
+def conexao(request):
+   if request.method == 'POST':
+    produto = ProdutoForm(request.POST,request.FILES or None)
+    if produto.is_valid():
+        produto.save()
+        return redirect ('produto:cadastro')
+    else:
+        return HttpResponse ('ERRO DE CORXÃO')
+ 
+
+def detalheproduto(request, pk):
+   data={}
+   data['db'] = Produto.objects.get(pk=pk)
+   return render (request, 'produto/detalheproduto.html', data)

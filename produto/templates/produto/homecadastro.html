@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load grfilters %}
+{% load static %}
+
+
+{% block conteudo %}
+    
+    <div class="=col-8 m-auto pt-2 pb-2 text-center ">
+        <h1> Produtos </h1>
+    </div>
+
+    <div class="=col-8 m-auto pt-2 pb-2 text-center">
+        <a href="{% url 'produto:adicionarproduto'  %}"class="btn btn-success"> Adicionar</a>
+    </div>
+
+    <div class="=col-8 m-auto pt-2 pb-2 text-center">
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Produto</th>
+                <th scope="col">Valor</th>
+                <th scope="col">Data de Validade</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for dbs in db%}
+                <tr>
+                  <th scope="row">{{dbs.id}}</th>
+                  <td>{{dbs.nome}}</td>
+                  <td>{{dbs.valor}}</td>
+                  <td>{{dbs.data_de_validade}}</td>
+                  <td>{{dbs.quantidade}}</td>
+                  <td>
+                    <a href="/detalheproduto/{{dbs.id}}/" class="btn btn-dark"> Detalhes</a>
+                    <a href="" class="btn btn-primary"> Editar</a>
+                    <a href="" class="btn btn-danger"> Deletar</a>
+                    </td>
+                </tr>
+              {% endfor %}
+          </table>
+    </div>
+
+{% endblock%}
