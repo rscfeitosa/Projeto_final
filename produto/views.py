@@ -5,9 +5,8 @@ from django.views import View
 from django.http import HttpResponse
 from django.contrib import messages
 from . import models
-from produto.formulario import ProdutoForm
-from produto.models import Produto
-
+from produto.formulario import ProdutoForm, VariacaoForm
+from produto.models import Produto, Variacao
 from pprint import pprint
 
 
@@ -17,6 +16,8 @@ class ListaProdutos(ListView):
     template_name = 'produto/lista.html'
     context_object_name='produtos'
     paginate_by = 8
+
+    
     
 
 
@@ -144,18 +145,22 @@ def cadastro(request):
 
 def adicionarproduto(request):
    data={}
+   base={}
    data['formulario'] = ProdutoForm()
-   return render (request, "produto/formulario.html", data)
+   base['estoque'] = VariacaoForm()
+   return render (request, "produto/formulario.html",base,data)
 
 def conexao(request):
    if request.method == 'POST':
     produto = ProdutoForm(request.POST,request.FILES or None)
+    estoque = VariacaoForm(request.POST,request.FILES or None)
     if produto.is_valid():
+        estoque.save()
         produto.save()
         return redirect ('produto:cadastro')
     else:
         return HttpResponse ('ERRO DE CORXÃO')
- 
+
 
 def detalheproduto(request, pk):
    data={}
@@ -164,17 +169,24 @@ def detalheproduto(request, pk):
 
 def edit(request, pk):
    data={}
+   base={}
    data['db'] = Produto.objects.get(pk=pk)
+   base['db'] = Variacao.objects.get(pk=pk)
    data['formulario'] = ProdutoForm(instance=data['db'])
+   base['estoque'] = VariacaoForm(instance=base['db'])
    return render (request, "produto/formulario.html", data)
 
 def update(request, pk):
     data={}
+    base={}
     data['db'] = Produto.objects.get(pk=pk)
+    base['db'] = Variacao.objects.get(pk=pk)
     if request.method == 'POST':
         produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
-        if produto.is_valid():
+        estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
+        if produto.is_valid() and estoque.is_valid():
             produto.save()
+            estoque.save()
             return redirect ('produto:cadastro')
     else:
         return HttpResponse ('ERRO DE CORXÃO')
