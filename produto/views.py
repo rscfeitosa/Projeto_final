@@ -16,7 +16,8 @@ class ListaProdutos(ListView):
     model = models.Produto
     template_name = 'produto/lista.html'
     context_object_name='produtos'
-    paginate_by = 3
+    paginate_by = 8
+    
 
 
 class DetalheProdutos(DetailView):
@@ -160,3 +161,25 @@ def detalheproduto(request, pk):
    data={}
    data['db'] = Produto.objects.get(pk=pk)
    return render (request, 'produto/detalheproduto.html', data)
+
+def edit(request, pk):
+   data={}
+   data['db'] = Produto.objects.get(pk=pk)
+   data['formulario'] = ProdutoForm(instance=data['db'])
+   return render (request, "produto/formulario.html", data)
+
+def update(request, pk):
+    data={}
+    data['db'] = Produto.objects.get(pk=pk)
+    if request.method == 'POST':
+        produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
+        if produto.is_valid():
+            produto.save()
+            return redirect ('produto:cadastro')
+    else:
+        return HttpResponse ('ERRO DE CORXÃO')
+
+def delete(requeste, pk):
+    db = Produto.objects.get(pk=pk)
+    db.delete()
+    return redirect ('produto:cadastro')
