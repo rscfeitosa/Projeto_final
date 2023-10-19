@@ -18,10 +18,12 @@
       <form  name="form" id="form" action="{% if db%}/update/{{db.id}}/{%else%}/conexao/{%endif%}" method="post" enctype="multipart/form-data">
           {% csrf_token %}
           {{formulario.as_p}}
-          {{estoque.as_p}}
+          
+          
                
-          <input type="submit" class="btn btn-success" value="Salvar">
+          <input type="submit" class="btn btn-success" value="Salvar"> <a href="/estoque/{{dbs.id}}" class="btn btn-warning"> Estoque</a>
       </form>
+    
     </div>
 
 {%endblock%}

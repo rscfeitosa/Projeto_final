@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from produto.views import cadastro, adicionarproduto, conexao, detalheproduto, edit, update, delete
+from produto.views import cadastro, adicionarproduto, conexao, detalheproduto, edit, update, delete, estoque
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -18,6 +18,7 @@ urlpatterns =[
     path('adicionarproduto/', adicionarproduto, name='adicionarproduto'),
     path('detalheproduto/<int:pk>/',detalheproduto,name='detalheproduto'),
     path('conexao/', conexao,name='conexao'),
+    path('estoque/<int:pk>/', estoque,name='estoque'),
     path('edit/<int:pk>/',edit,name='edit'),
     path('update/<int:pk>/',update,name='update'),
     path('delete/<int:pk>/',delete,name='delete'),

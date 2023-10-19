@@ -140,22 +140,32 @@ class Finalizar(View):
 
 def cadastro(request):
    data = {}
+   base = {}
    data['db'] = Produto.objects.all()
-   return render (request, "produto/homecadastro.html", data)
+   base['db'] = Variacao.objects.all()    
+   return render (request, "produto/homecadastro.html", data or base)
 
 def adicionarproduto(request):
    data={}
-   base={}
    data['formulario'] = ProdutoForm()
-   base['estoque'] = VariacaoForm()
-   return render (request, "produto/formulario.html",base,data)
+   return render (request, "produto/formulario.html",data)
+
+def estoque(request, pk):
+   #data={}
+   base={}
+   #data['db'] = Produto.objects.get(pk=pk)
+   base['db'] = Variacao.objects.get(pk=pk)
+  # data['formulario'] = ProdutoForm(instance=data['db'])
+   base['formulario'] = VariacaoForm(instance=base['db'])  
+   return render (request, "produto/formulario.html", base)
+
+
+
 
 def conexao(request):
    if request.method == 'POST':
     produto = ProdutoForm(request.POST,request.FILES or None)
-    estoque = VariacaoForm(request.POST,request.FILES or None)
     if produto.is_valid():
-        estoque.save()
         produto.save()
         return redirect ('produto:cadastro')
     else:
@@ -171,9 +181,9 @@ def edit(request, pk):
    data={}
    base={}
    data['db'] = Produto.objects.get(pk=pk)
-   base['db'] = Variacao.objects.get(pk=pk)
+   base['db'] = Variacao.objects.get(pk=1)
    data['formulario'] = ProdutoForm(instance=data['db'])
-   base['estoque'] = VariacaoForm(instance=base['db'])
+   base['formulario'] = VariacaoForm(instance=base['db'])  
    return render (request, "produto/formulario.html", data)
 
 def update(request, pk):
@@ -184,12 +194,14 @@ def update(request, pk):
     if request.method == 'POST':
         produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
         estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
-        if produto.is_valid() and estoque.is_valid():
+        if produto.is_valid(): 
             produto.save()
-            estoque.save()
             return redirect ('produto:cadastro')
-    else:
-        return HttpResponse ('ERRO DE CORXÃO')
+        if  estoque.is_valid(): 
+            estoque.save()
+            return redirect ('produto:cadastro')   
+        else:
+            return HttpResponse ('ERRO DE CORXÃO')
 
 def delete(requeste, pk):
     db = Produto.objects.get(pk=pk)
