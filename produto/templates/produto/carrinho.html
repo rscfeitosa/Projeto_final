@@ -39,7 +39,7 @@
                     <td>
                         {{linha.quantidade}} x  
                         {% if linha.preco_unitario_promocional %}
-                        {{ linha.preco_unitario_promocional }}
+                        {{ linha.preco_unitario_promocional|formatar_preco }}
                         {%else%}
                         {{linha.preco_unitario}}
                         {%endif%}
@@ -51,7 +51,7 @@
 
                         <td>{{ linha.preco_quantitativo_promocional|formatar_preco}}</td>
                     {% else %}
-                        <td>{{ linha.preco_quantitativo}}</td>
+                        <td>{{ linha.preco_quantitativo }}</td>
                     {%endif%}
                 </tr>
 

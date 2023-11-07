@@ -5,7 +5,6 @@ register = Library()
 
 
 @register.filter
-
 def formatar_preco(val):
     return utils.formatar_preco(val)
 

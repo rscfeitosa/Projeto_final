@@ -1,5 +1,6 @@
-{%load grfilters%}
+{% load grfilters %}
 {% load static %}
+
 
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
     <a class="navbar-brand" href="{% url 'produto:lista' %}">Mundo do Nitendo</a>
@@ -41,9 +42,7 @@
             <li class="nav-item">
                 <a class="nav-link nav-cart-link active" href="{% url  'produto:carrinho' %}">
 
-                    <span class="nav-cart-text mr-1">
-                        
-                    </span>
+
 
                     <span class="nav-cart-icon mr-2">
                         <i class="fas fa-shopping-cart"></i>
