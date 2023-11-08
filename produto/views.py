@@ -76,7 +76,7 @@ class AdicionarAoCarrinho(View):
 
         if prod_id in carrinho:
             quantidade_carrinho = carrinho[prod_id]['quantidade']
-            quantidade_carrinho = quantidade_carrinho + 1
+            quantidade_carrinho +=  1
 
             if prod_estoque < quantidade_carrinho:
                 messages.warning(
@@ -88,7 +88,7 @@ class AdicionarAoCarrinho(View):
             quantidade_carrinho = prod_estoque
 
             carrinho[prod_id]['quantidade'] = quantidade_carrinho
-            carrinho[prod_id] ['preco_quantitativo'] = preco_unitario *  quantidade_carrinho
+            carrinho[prod_id] ['preco_quantitativo'] = preco_unitario * quantidade_carrinho
             carrinho[prod_id] ['preco_quantitativo_promocional'] = preco_unitario_promocional *  quantidade_carrinho
 
         else:
@@ -99,6 +99,7 @@ class AdicionarAoCarrinho(View):
                 'prod_id' : prod_id,
                 'preco_unitario' : preco_unitario,
                 'preco_unitario_promocional' : preco_unitario_promocional,
+                'preco_quantitativo': preco_unitario,
                 'preco_quantitativo_promocional ' : preco_unitario_promocional,
                 'quantidade' : 1,
                 'slug' : slug,
@@ -110,7 +111,7 @@ class AdicionarAoCarrinho(View):
         messages.success(
         self.request,
         f' Produto {produto_nome} {prod_nome} adicionado com sucesso ao carrinho'
-        f'  Quantidade de produto adicionado {carrinho[prod_id]["quantidade"]}'
+        f'  Quantidade de produto adicionado {carrinho[prod_id]["quantidade"]} x.'
         )
         return redirect(http_referer)
 
@@ -158,10 +159,16 @@ class Finalizar(View):
 
 def cadastro(request):
    data = {}
-  # base = {}
+   #base = {}
    data['db'] = Produto.objects.all()
-  # base['db'] = Variacao.objects.all()    
+   #base['db'] = Variacao.objects.all()    
    return render (request, "produto/homecadastro.html", data )
+
+def estoque(request,pk):
+   base={}
+   base['db'] = Variacao.objects.get(pk=1)
+   base['estoque'] = VariacaoForm(instance=base['db'])  
+   return render (request, "produto/formulario.html", base)
 
 def adicionarproduto(request):
    data={}
@@ -172,9 +179,13 @@ def adicionarproduto(request):
 def conexao(request):
    if request.method == 'POST':
     produto = ProdutoForm(request.POST,request.FILES or None)
+    estoque = VariacaoForm(request.POST,request.FILES or None)
     if produto.is_valid():
         produto.save()
         return redirect ('produto:cadastro')
+    if  estoque.is_valid(): 
+        estoque.save()
+        return redirect ('produto:cadastro') 
     else:
         return HttpResponse ('ERRO DE CORXÃO')
 
@@ -186,27 +197,24 @@ def detalheproduto(request, pk):
 
 def edit(request, pk):
    data={}
-  # base={}
    data['db'] = Produto.objects.get(pk=pk)
-  # base['db'] = Variacao.objects.get(pk=1)
    data['formulario'] = ProdutoForm(instance=data['db'])
-  # base['formulario'] = VariacaoForm(instance=base['db'])  
    return render (request, "produto/formulario.html", data)
 
 def update(request, pk):
     data={}
-    #base={}
+    base={}
     data['db'] = Produto.objects.get(pk=pk)
-   # base['db'] = Variacao.objects.get(pk=pk)
+    base['db'] = Variacao.objects.get(pk=pk)
     if request.method == 'POST':
         produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
-        #estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
+        estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
         if produto.is_valid(): 
             produto.save()
             return redirect ('produto:cadastro')
-        #if  estoque.is_valid(): 
-           # estoque.save()
-            #return redirect ('produto:cadastro')   
+        if  estoque.is_valid(): 
+            estoque.save()
+            return redirect ('produto:cadastro')   
         else:
             return HttpResponse ('ERRO DE CORXÃO')
 
