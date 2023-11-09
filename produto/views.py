@@ -76,11 +76,8 @@ class AdicionarAoCarrinho(View):
 
         if prod_id in carrinho:
             quantidade_carrinho = carrinho[prod_id]['quantidade']
-<<<<<<< HEAD
-            quantidade_carrinho = 1+1
-=======
             quantidade_carrinho +=  1
->>>>>>> origin/master
+
 
             if prod_estoque < quantidade_carrinho:
                 messages.warning(
@@ -123,30 +120,16 @@ class AdicionarAoCarrinho(View):
 
 class RemoverDoCarrinho(View):
     def get(self, *args, **kwargs):
-<<<<<<< HEAD
-        http_referer =self.request.META.get('HTTP_REFERER', reverse ('produto:lista'))
-        prod_id = self.request.GET.get('vid')
-       
-=======
 
         http_referer =self.request.META.get('HTTP_REFERER', reverse ('produto:lista'))
         prod_id = self.request.GET.get('vid')
 
->>>>>>> origin/master
+
         if not prod_id:
             return redirect(http_referer)
         if not self.request.session.get('carrinho'):
             return redirect(http_referer)
-<<<<<<< HEAD
-        if prod_id not in self.request.session['carrinho']:
-            return redirect(http_referer)
-        
-        carrinho =self.request.session['carrinho'][prod_id]
-        messages.success(
-            self.request,
-            f'Produto {carrinho["prod_nome"]} {carrinho["prod_nome"]}'
-            f'removido do seu carrinho'
-=======
+
         if  prod_id not in self.request.session['carrinho']:
             return redirect(http_referer)
         
@@ -156,7 +139,7 @@ class RemoverDoCarrinho(View):
             self.request,
             f'Produto {carrinho["produto_nome"]} {carrinho["prod_nome"]}'
             f'removido do seu carrinho.'
->>>>>>> origin/master
+
         )
 
         del self.request.session['carrinho'][prod_id]
@@ -173,7 +156,7 @@ class Carrinho(View):
 
 
 
-class Finalizar(View):
+class ResumoDaCompra(View):
     def get(self, *args, **kwargs):
         return HttpResponse ('FIM')
     
