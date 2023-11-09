@@ -12,8 +12,8 @@ class Produto(models.Model):
     desricao_longa = models.TextField()
     imagem  = models.ImageField(upload_to='produto_imagens/%Y/%m/')
     slug = models.SlugField(unique=True, blank=True, null=True)
-    preco_marketing = models.FloatField(default=0)
-    preco_marketing_promocional= models.FloatField(default=0)
+    preco_marketing = models.FloatField(verbose_name='Preço')
+    preco_marketing_promocional= models.FloatField(default=0, verbose_name='Preço Promo.')
     tipo  = models.CharField(
         default='V', 
         max_length=1,
@@ -77,7 +77,7 @@ class Variacao(models.Model):
     nome = models.CharField(max_length=256, blank=True, null=True)
     preco = models.FloatField()
     preco_promocional = models.FloatField(default=0)
-    estoque = models.PositiveIntegerField(default=1)
+    estoque = models.IntegerField(default=1)
 
     #Nome da variação
     def __str__(self):

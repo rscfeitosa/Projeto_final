@@ -1,5 +1,6 @@
-{%load grfilters%}
+{% load grfilters %}
 {% load static %}
+
 
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
     <a class="navbar-brand" href="{% url 'produto:lista' %}">Mundo do Nitendo</a>
@@ -38,12 +39,17 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'cliente:criar' %}">Cliente</a>
             </li>
+
+            {% if request.session.carrinho %}
             <li class="nav-item">
                 <a class="nav-link nav-cart-link active" href="{% url  'produto:carrinho' %}">
-
                     <span class="nav-cart-text mr-1">
-                        
+                        Carrinho
                     </span>
+                    <span class="nav-cart-count mr-1">
+                        <strong>{{ request.session.carrinho|cart_totalqtd}} x</strong>
+                    </span>
+                    
 
                     <span class="nav-cart-icon mr-2">
                         <i class="fas fa-shopping-cart"></i>
@@ -51,6 +57,8 @@
 
                 </a>
             </li>
+            {%endif%}
+
         </ul>
         <form mothod="get">
             <input class="form-control mr-sm-2" type="text" name="Search" id="Search" placeholder="Buscar">

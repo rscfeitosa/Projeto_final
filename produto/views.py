@@ -76,7 +76,11 @@ class AdicionarAoCarrinho(View):
 
         if prod_id in carrinho:
             quantidade_carrinho = carrinho[prod_id]['quantidade']
+<<<<<<< HEAD
             quantidade_carrinho = 1+1
+=======
+            quantidade_carrinho +=  1
+>>>>>>> origin/master
 
             if prod_estoque < quantidade_carrinho:
                 messages.warning(
@@ -88,32 +92,30 @@ class AdicionarAoCarrinho(View):
             quantidade_carrinho = prod_estoque
 
             carrinho[prod_id]['quantidade'] = quantidade_carrinho
-            carrinho[prod_id] ['preco_quantitativo'] = preco_unitario *  quantidade_carrinho
+            carrinho[prod_id] ['preco_quantitativo'] = preco_unitario * quantidade_carrinho
             carrinho[prod_id] ['preco_quantitativo_promocional'] = preco_unitario_promocional *  quantidade_carrinho
-
-
-
-
 
         else:
             carrinho[prod_id]={
                 'produto_id'   : produto_id,
                 'produto_nome' : produto_nome,
-                'prod_nome' : prod_nome,
+                'prod_nome' : prod_nome, 
                 'prod_id' : prod_id,
                 'preco_unitario' : preco_unitario,
                 'preco_unitario_promocional' : preco_unitario_promocional,
+                'preco_quantitativo': preco_unitario,
                 'preco_quantitativo_promocional ' : preco_unitario_promocional,
                 'quantidade' : 1,
                 'slug' : slug,
                 'imagem' : imagem, }
 
         self.request.session.save()
+        pprint(carrinho)
 
         messages.success(
         self.request,
         f' Produto {produto_nome} {prod_nome} adicionado com sucesso ao carrinho'
-        f'Quantidade de produto adicionado {carrinho[prod_id]["quantidade"]}'
+        f'  Quantidade de produto adicionado {carrinho[prod_id]["quantidade"]} x.'
         )
         return redirect(http_referer)
 
@@ -121,13 +123,21 @@ class AdicionarAoCarrinho(View):
 
 class RemoverDoCarrinho(View):
     def get(self, *args, **kwargs):
+<<<<<<< HEAD
         http_referer =self.request.META.get('HTTP_REFERER', reverse ('produto:lista'))
         prod_id = self.request.GET.get('vid')
        
+=======
+
+        http_referer =self.request.META.get('HTTP_REFERER', reverse ('produto:lista'))
+        prod_id = self.request.GET.get('vid')
+
+>>>>>>> origin/master
         if not prod_id:
             return redirect(http_referer)
         if not self.request.session.get('carrinho'):
             return redirect(http_referer)
+<<<<<<< HEAD
         if prod_id not in self.request.session['carrinho']:
             return redirect(http_referer)
         
@@ -136,6 +146,17 @@ class RemoverDoCarrinho(View):
             self.request,
             f'Produto {carrinho["prod_nome"]} {carrinho["prod_nome"]}'
             f'removido do seu carrinho'
+=======
+        if  prod_id not in self.request.session['carrinho']:
+            return redirect(http_referer)
+        
+        carrinho = self.request.session['carrinho'][prod_id]
+
+        messages.success(
+            self.request,
+            f'Produto {carrinho["produto_nome"]} {carrinho["prod_nome"]}'
+            f'removido do seu carrinho.'
+>>>>>>> origin/master
         )
 
         del self.request.session['carrinho'][prod_id]
@@ -159,34 +180,33 @@ class Finalizar(View):
 
 def cadastro(request):
    data = {}
-   base = {}
+   #base = {}
    data['db'] = Produto.objects.all()
-   base['db'] = Variacao.objects.all()    
-   return render (request, "produto/homecadastro.html", data or base)
+   #base['db'] = Variacao.objects.all()    
+   return render (request, "produto/homecadastro.html", data )
+
+def estoque(request,pk):
+   base={}
+   base['db'] = Variacao.objects.get(pk=1)
+   base['estoque'] = VariacaoForm(instance=base['db'])  
+   return render (request, "produto/formulario.html", base)
 
 def adicionarproduto(request):
    data={}
    data['formulario'] = ProdutoForm()
    return render (request, "produto/formulario.html",data)
 
-def estoque(request, pk):
-   #data={}
-   base={}
-   #data['db'] = Produto.objects.get(pk=pk)
-   base['db'] = Variacao.objects.get(pk=pk)
-  # data['formulario'] = ProdutoForm(instance=data['db'])
-   base['formulario'] = VariacaoForm(instance=base['db'])  
-   return render (request, "produto/formulario.html", base)
-
-
-
 
 def conexao(request):
    if request.method == 'POST':
     produto = ProdutoForm(request.POST,request.FILES or None)
+    estoque = VariacaoForm(request.POST,request.FILES or None)
     if produto.is_valid():
         produto.save()
         return redirect ('produto:cadastro')
+    if  estoque.is_valid(): 
+        estoque.save()
+        return redirect ('produto:cadastro') 
     else:
         return HttpResponse ('ERRO DE CORXÃO')
 
@@ -198,11 +218,8 @@ def detalheproduto(request, pk):
 
 def edit(request, pk):
    data={}
-   base={}
    data['db'] = Produto.objects.get(pk=pk)
-   base['db'] = Variacao.objects.get(pk=1)
    data['formulario'] = ProdutoForm(instance=data['db'])
-   base['formulario'] = VariacaoForm(instance=base['db'])  
    return render (request, "produto/formulario.html", data)
 
 def update(request, pk):
