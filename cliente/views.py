@@ -19,10 +19,10 @@ class BaseCliente(View):
 
         self.carrinho = copy.deepcopy(self.request.session.get('carrinho',{}))#copiando carrinho para o perfil do user
 
-        self.perfil = None
+        self.cliente = None
 
         if self.request.user.is_authenticated: #checando o User
-            self.perfil = models.Cliente.objects.filter(usuario=self.request.user).first()
+            self.cliente = models.Cliente.objects.filter(cliente=self.request.user).first()
             self.contexto ={
                 'userform': forms.UserForm(
                     data=self.request.POST or None,
@@ -55,7 +55,7 @@ class BaseCliente(View):
 
 class Criar(BaseCliente):
     def post(self, *args, **kwargs):
-        if not self.userform.is_valid() or not self.perfilform.is_valid():
+        if not self.userform.is_valid() or not self.clienteform.is_valid():
             return self.renderizar
         
         username = self.userform.cleaned_data.get('username')
@@ -77,7 +77,7 @@ class Criar(BaseCliente):
             usuario.last_name = last_name
             usuario.save()
 
-            pass
+            #pass
 
         #user não logado (novo)
         else:
@@ -85,9 +85,9 @@ class Criar(BaseCliente):
             usuario.set_password(password)
             usuario.save()
 
-            perfil = self.clienteform.save(commit=False)
-            perfil.usuario = usuario
-            perfil.save()
+            cliente = self.clienteform.save(commit=False)
+            cliente.usuario = usuario
+            cliente.save()
 
         if password:
             autentica = authenticate(self.request, username=usuario, password=password)

@@ -67,30 +67,36 @@ class AdicionarAoCarrinho(View):
                 "Estoque Insuficiente"
             )
             return redirect(http_referer)
-
+       
         if not self.request.session.get('carrinho'):
             self.request.session["carrinho"] = {}
             self.request.session.save()
         
         carrinho = self.request.session['carrinho']
 
+
         if prod_id in carrinho:
+            
             quantidade_carrinho = carrinho[prod_id]['quantidade']
             quantidade_carrinho +=  1
+            
 
+            
 
             if prod_estoque < quantidade_carrinho:
+                quantidade_carrinho = prod_estoque
                 messages.warning(
                 self.request,
                 f"Estoque Insuficiente pra {quantidade_carrinho}x  no "
                 f'produto "{produto_nome}" .Adicionamos {prod_estoque}x ' 
                 f' no seu carrinho '
             )
-            quantidade_carrinho = prod_estoque
+            
 
             carrinho[prod_id]['quantidade'] = quantidade_carrinho
             carrinho[prod_id] ['preco_quantitativo'] = preco_unitario * quantidade_carrinho
             carrinho[prod_id] ['preco_quantitativo_promocional'] = preco_unitario_promocional *  quantidade_carrinho
+            
 
         else:
             carrinho[prod_id]={
@@ -102,7 +108,7 @@ class AdicionarAoCarrinho(View):
                 'preco_unitario_promocional' : preco_unitario_promocional,
                 'preco_quantitativo': preco_unitario,
                 'preco_quantitativo_promocional ' : preco_unitario_promocional,
-                'quantidade' : 1,
+                'quantidade' : quantidade,
                 'slug' : slug,
                 'imagem' : imagem, }
 
@@ -162,6 +168,8 @@ class ResumoDaCompra(View):
     
 
 def cadastro(request):
+   operador=request.user
+   print ("#####",operador)
    data = {}
    #base = {}
    data['db'] = Produto.objects.all()
