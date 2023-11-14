@@ -53,11 +53,13 @@ class UserForm(forms.ModelForm):
 
         #User LOgado
         if self.usuario:
-            if usuario_data != usuario_db.username:
-                if usuario_db:
-                    validation_error_msgs['username']= error_msg_user_existe
-            if email_data != email_db.email:
-                validation_error_msgs['email'] = error_msg_email_existe
+            if usuario_db:
+                if usuario_data != usuario_db.username:
+                    if usuario_db:
+                        validation_error_msgs['username']= error_msg_user_existe
+            if email_db:            
+                if email_data != email_db.email:
+                    validation_error_msgs['email'] = error_msg_email_existe
 
             if password_data:        
                 if password_data != password2_data:
