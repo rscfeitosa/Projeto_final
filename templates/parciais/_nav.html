@@ -3,12 +3,20 @@
 
 
 <nav class="navbar navbar-dark bg-primary navbar-expand-lg">
-    <a class="navbar-brand" href="{% url 'produto:lista' %}">Mundo do Nitendo</a>
+    <a class="navbar-brand" href="{% url 'produto:lista' %}">Mario Word !</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-
+<style>
+    body {
+        background-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5)),
+                  url("media/produto_imagens/2023/11/caixa2.jpg");
+        background-size: 800px 600px;
+        background-size: 50px; 
+       
+    }
+</style>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
@@ -65,4 +73,6 @@
             <!--<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>-->
         </form>
     </div>
+
+    
 </nav>
