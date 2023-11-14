@@ -7,7 +7,7 @@ class ClienteForm(forms.ModelForm):
     class Meta:
         model = models.Cliente
         fields = '__all__'
-        exclude = ( 'usuario',)
+        exclude = ( 'usuario','cliente')
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(
@@ -50,6 +50,7 @@ class UserForm(forms.ModelForm):
         error_msg_email_existe = "email já existe"
         error_msg_pasword_match = "Senhas não conferem"
         error_msg_pasword_short = "sua senha precisa no minimo de 6 caracteres"
+        error_msg_required_field = "Campo obrigatório "
 
         #User LOgado
         if self.usuario:
@@ -73,7 +74,23 @@ class UserForm(forms.ModelForm):
             
         #user não logado
         else:
-            pass
+            if usuario_db:
+                validation_error_msgs['username']= error_msg_user_existe
+            if email_db:
+                validation_error_msgs['email'] = error_msg_email_existe
+
+            if not password_data:
+                validation_error_msgs['password'] = error_msg_required_field
+            
+            if not password2_data:
+                validation_error_msgs['password2'] = error_msg_required_field
+     
+            if password_data != password2_data:
+                validation_error_msgs['password']= error_msg_pasword_match   
+                validation_error_msgs['password2']= error_msg_pasword_match 
+                
+            if len(password_data)<6:
+                validation_error_msgs['password'] = error_msg_pasword_short    
 
 
         if validation_error_msgs:
