@@ -178,7 +178,7 @@ def cadastro(request):
 
 def estoque(request,pk):
    base={}
-   base['db'] = Variacao.objects.get(pk=1)
+   base['db'] = Variacao.objects.get(produto=pk)
    base['estoque'] = VariacaoForm(instance=base['db'])  
    return render (request, "produto/formulario.html", base)
 
@@ -192,12 +192,12 @@ def conexao(request):
    if request.method == 'POST':
     produto = ProdutoForm(request.POST,request.FILES or None)
     estoque = VariacaoForm(request.POST,request.FILES or None)
-    if produto.is_valid():
+    if produto.is_valid():        
         produto.save()
         return redirect ('produto:cadastro')
-    if  estoque.is_valid(): 
-        estoque.save()
-        return redirect ('produto:cadastro') 
+    if  estoque.is_valid():         
+            estoque.save()
+            return redirect ('produto:cadastro') 
     else:
         return HttpResponse ('ERRO DE CORXÃO')
 
@@ -209,24 +209,31 @@ def detalheproduto(request, pk):
 
 def edit(request, pk):
    data={}
+   base={}
    data['db'] = Produto.objects.get(pk=pk)
+   base['db'] = Variacao.objects.get(produto=pk)
    data['formulario'] = ProdutoForm(instance=data['db'])
-   return render (request, "produto/formulario.html", data)
+   base['estoque'] = VariacaoForm(instance=base['db']) 
+   return render (request, "produto/formulario.html",  data|base )
 
 def update(request, pk):
     data={}
     base={}
+    print ('11111111111',pk)
     data['db'] = Produto.objects.get(pk=pk)
-    base['db'] = Variacao.objects.get(pk=pk)
+  
+   
+    base['db'] = Variacao.objects.get(produto=pk)
+    print ('2222222222222',produto)
     if request.method == 'POST':
         produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
         estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
-        if produto.is_valid(): 
+        if produto.is_valid():          
             produto.save()
             return redirect ('produto:cadastro')
-        if  estoque.is_valid(): 
-            estoque.save()
-            return redirect ('produto:cadastro')   
+        if  estoque.is_valid():             
+                estoque.save()
+                return redirect ('produto:cadastro')   
         else:
             return HttpResponse ('ERRO DE CORXÃO')
 

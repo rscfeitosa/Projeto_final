@@ -104,7 +104,7 @@ class Criar(BaseCliente):
             usuario.save()
 
             cliente = self.clienteform.save(commit=False)
-            cliente.usuario = usuario
+            cliente.cliente= usuario
             cliente.save()
 
         if password:
