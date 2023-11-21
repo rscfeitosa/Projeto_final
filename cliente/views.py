@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_list_or_404
+from django.shortcuts import render, get_list_or_404, redirect
 from django.views.generic import ListView
 from django.views   import View
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 import copy
-
+from django.contrib import messages
 from . import models
 from . import forms
 
@@ -23,6 +23,7 @@ class BaseCliente(View):
 
         if self.request.user.is_authenticated: #checando o User
             self.cliente = models.Cliente.objects.filter(cliente=self.request.user).first()
+
             self.contexto ={
                 'userform': forms.UserForm(
                     data=self.request.POST or None,
@@ -45,6 +46,8 @@ class BaseCliente(View):
         self.userform=self.contexto['userform']
         self.clienteform = self.contexto['clienteform']
 
+        if self.request.user.is_authenticated:
+            self.template_name = 'perfil/atualizar.html'
 
 
         self.renderizar = render(self.request,self.template_name,self.contexto )
@@ -56,6 +59,11 @@ class BaseCliente(View):
 class Criar(BaseCliente):
     def post(self, *args, **kwargs):
         if not self.userform.is_valid() or not self.clienteform.is_valid():
+            messages.error(
+                self.request,
+                'Existem erros no formulário de cadastro. Verifique se todos '
+                'os campos foram preenchidos corretamente.'
+            )
             return self.renderizar
         
         username = self.userform.cleaned_data.get('username')
@@ -67,7 +75,7 @@ class Criar(BaseCliente):
         #user logado
         if self.request.user.is_authenticated:
             usuario = get_list_or_404(User, username=self.request.user.username)
-            #usuario.username = username
+            usuario.username = username
 
             if password:
                 usuario.set_password(password)
@@ -77,7 +85,17 @@ class Criar(BaseCliente):
             usuario.last_name = last_name
             usuario.save()
 
-            #pass
+            if not self.cliente:
+                self.clienteform.cleaned_data['usuario'] = usuario
+                cliente = models.Cliente(**self.clienteform.cleaned_data)
+                cliente.save()
+            else:
+                cliente = self.clienteform.save(commit=False)
+                cliente.usuario= usuario
+                cliente.save()
+
+
+         
 
         #user não logado (novo)
         else:
@@ -100,6 +118,16 @@ class Criar(BaseCliente):
         self.request.session['carrinho'] = self.carrinho
         self.request.session.save()
 
+        messages.success(
+            self.request,
+            'Seu cadastro foi criado ou atualizado com sucesso.'
+        )
+        messages.success(
+            self.request,
+            'Você fez login e pode concluir sua compra.'
+        )
+
+        return redirect('produto:carrinho')
         return self.renderizar
 
 

@@ -7,7 +7,7 @@ class ClienteForm(forms.ModelForm):
     class Meta:
         model = models.Cliente
         fields = '__all__'
-        exclude = ( 'usuario','cliente')
+        exclude = ('cliente','usuario')
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(
