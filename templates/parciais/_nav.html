@@ -10,8 +10,8 @@
     </button>
 <style>
     body {
-        background-image: linear-gradient(rgba(0, 0, 255, 0.904), rgba(255, 255, 0, 0.5)),
-                  url("media/produto_imagens/2023/10/zelda.webp");
+        background-image: linear-gradient(rgb(235, 53, 53), rgba(241, 241, 238, 0.897)),
+                  url("media/produto_imagens/2023/10/nintendo.jpg");
       
         background-position: center center ;
         background-repeat: no-repeat;
@@ -30,27 +30,29 @@
                     <a class="nav-link" href=" admin/ ">Admin</a>
                 </li></a>
                 </li>
-            <!--<li class="nav-item dropdown">
+
+            {%if request.user.is_authenticated %}    
+            <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
+                    Conta
                 </a>
-                div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{% url 'cliente:criar' %}">Atualizar Dados</a>
+                    <a class="dropdown-item" href="{% url 'cliente:logout' %}">Sair</a>
+
                 </div> 
-            </li>-->
+            </li>
+            {%endif%}
 
             
             
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'produto:cadastro' %}">Cadastro</a>
+                    <a class="nav-link" href="{% url 'produto:cadastro' %}">Produto</a>
                 </li>
             <!--{% endif %}-->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'cliente:criar' %}">Cliente</a>
+                <a class="nav-link" href="{% url 'cliente:criar' %}">Entrar</a>
             </li>
 
             {% if request.session.carrinho %}

@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from django.views   import View
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 import copy
 from django.contrib import messages
 from . import models
@@ -127,7 +127,7 @@ class Criar(BaseCliente):
             'Você fez login e pode concluir sua compra.'
         )
 
-        return redirect('produto:carrinho')
+        return redirect('cliente:criar')
         return self.renderizar
 
 
@@ -138,10 +138,42 @@ class Atualizar(View):
 
 
 class Login(View):
-    def get(self, *args, **kwargs):
-        return HttpResponse ('LOGIN')
+    def post(self, *args, **kwargs):
+        username = self.request.POST.get('username')
+        password = self.request.POST.get('password')
+        
+        if not username or not password:
+            messages.erro(
+            self.request,
+            'Usuario ou senha invalidos.'
+            )
+            return redirect('cliente:criar')
+        usuario = authenticate (self.request, username=username, password=password)
+
+        if not usuario:
+            messages.erro(
+            self.request,
+            'Usuario ou senha invalidos.'
+            )
+            return redirect('cliente:criar')
+        
+        
+        login(self.request, user=usuario)
+        messages.success(
+        self.request,
+        'Login realizado com sucesso'
+        )
+        return redirect ('produto:carrinho')
+
 
 
 class Logout(View):
     def get(self, *args, **kwargs):
-        return HttpResponse ('LOGOUT')
+        carrinho = copy.deepcopy(self.request.session.get('carrinho'))
+
+        logout(self.request)
+
+        self.request.session['carrinho'] = carrinho
+        self.request.session.save()
+
+        return redirect('produto:lista')
