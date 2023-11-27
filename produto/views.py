@@ -219,12 +219,8 @@ def edit(request, pk):
 def update(request, pk):
     data={}
     base={}
-    print ('11111111111',pk)
-    data['db'] = Produto.objects.get(pk=pk)
-  
-   
-    base['db'] = Variacao.objects.get(produto=pk)
-    print ('2222222222222',produto)
+    data['db'] = Produto.objects.get(pk=pk)  
+    base['db'] = Variacao.objects.get(produto=pk)    
     if request.method == 'POST':
         produto = ProdutoForm(request.POST,request.FILES or None, instance=data['db'])
         estoque = VariacaoForm(request.POST,request.FILES or None, instance=base['db'])
