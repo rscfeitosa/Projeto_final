@@ -8,6 +8,7 @@ from . import models
 from produto.formulario import ProdutoForm, VariacaoForm
 from produto.models import Produto, Variacao
 from pprint import pprint
+from cliente.models import Cliente
 
 
 
@@ -160,13 +161,6 @@ class Carrinho(View):
         }
         return render(self.request, 'produto/carrinho.html', contexto)
 
-
-
-class ResumoDaCompra(View):
-    def get(self, *args, **kwargs):
-        return HttpResponse ('FIM')
-    
-
 def cadastro(request):
    operador=request.user
    print ("#####",operador)
@@ -237,3 +231,33 @@ def delete(requeste, pk):
     db = Produto.objects.get(pk=pk)
     db.delete()
     return redirect ('produto:cadastro')
+
+
+
+class ResumoDaCompra(View):
+    def get(self, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return redirect('cliente:criar')
+
+        cliente = Cliente.objects.filter(cliente=self.request.user).exists()
+
+        if not cliente:
+            messages.error(
+                self.request,
+                'Usuário sem perfil.'
+            )
+            return redirect('cliente:criar')
+
+        if not self.request.session.get('carrinho'):
+            messages.error(
+                self.request,
+                'Carrinho vazio.'
+            )
+            return redirect('produto:lista')
+
+        contexto = {
+            'usuario': self.request.user,
+            'carrinho': self.request.session['carrinho'],
+        }
+
+        return render(self.request, 'produto/resumodacompra.html', contexto)
