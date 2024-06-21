@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     
     
     #TODO: remover debug toolbar
-    'debug_toolbar',
+   'debug_toolbar',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
