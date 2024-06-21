@@ -44,11 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap4',
 
-
-    
-    
-    #TODO: remover debug toolbar
-   'debug_toolbar',
+    'debug_toolbar',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
