@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load grfilters %}
+{% load static %}
+
+
+{% block conteudo %}
+    
+    <div class="=col-8 m-auto pt-2 pb-2 text-center ">
+        <h1> Cadastro </h1>
+    </div>
+
+    <div class="=col-8 m-auto pt-2 pb-2 text-center">
+        <a href="{% url 'produto:cadastro' %}" class="btn btn-info">Voltar</a>
+    </div>
+
+    <div class="=col-8 m-auto pt-2 pb-2 text-center">
+      <div id="result"></div>
+      <form  name="form" id="form" action="{% if db%}/update/{{db.id}}/{%else%}/conexao/{%endif%}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{formulario.as_p}}
+          {{estoque.as_p}}
+
+          
+          
+               
+       <input type="submit" class="btn btn-success" value="Salvar"> <!-- <a href="/estoque/{{dbs.id}}" class="btn btn-warning"> Estoque</a> -->
+      </form>
+      
+    
+    </div>
+
+{%endblock%}
