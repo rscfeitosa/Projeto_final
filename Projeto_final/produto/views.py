@@ -56,7 +56,7 @@ class AdicionarAoCarrinho(View):
         slug = produto.slug
         imagem = produto.imagem
 
-        if imagem:"lista/cadastrar.html" 
+        if imagem:
             imagem = imagem.name
         else:
             imagem = ''
